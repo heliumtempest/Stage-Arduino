@@ -23,8 +23,7 @@ class ConnexionPostgres:
 
     def connexion_bdd(self):
         """Initialise une connexion vers la base de données"""
-        # TODO try/except
-        # Rq : database n'est pas un paramètre nécéssaire
+        # Rq : database n'est pas un paramètre nécéssaire pour une connexion
         # Rq2 : la connexion semble se faire même si le serveur n'est pas démarré (wow!)
         try:
             connexion = psycopg2.connect(
@@ -35,9 +34,9 @@ class ConnexionPostgres:
             )
             #print("Connexion effectuée")
             return connexion
-
         except psycopg2.OperationalError:
             print("Échec de la connexion à la base de données")
+            print("Verifier les paramètres de connexion")
             exit()
 
 
@@ -51,12 +50,11 @@ class ConnexionPostgres:
             curseur = connexion.cursor()
             curseur.execute(requete_sql)
             connexion.commit()
+            curseur.close() #!
             connexion.close()
+        #except psycopg2.OperationalError:
         except:
             print("Echec le l'execution de la requete")
+            print("La requête était : ", requete_sql)
             raise
-
-# TODO effacer ces petits tests à l'occasion
-# utilisateur = PostgresDAO()
-# utilisateur.defaut_param()
-# utilisateur.connexion_bdd()
+        #TODO : cas d'une colonne n'éxistant pas : psycopg2.errors.UndefinedColumn

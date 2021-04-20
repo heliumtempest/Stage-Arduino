@@ -19,7 +19,7 @@ except:
   
 try:  
     import Commun.ConnexionPostgres as pg
-    import Commun.Port as pt #<- il pose pb
+    import Commun.Port as pt
 except:
     print("Import des modules raté")
     input("Appuyer sur une touche pour continuer")
@@ -40,17 +40,13 @@ elif(reponse == "N" or reponse == "n"):
 else:
     print("g pa konpri")
     input()
-    exit()
+    exit
 
+# Vérifie la validité de la connexion
+utilisateur.connexion_bdd()
+
+# Lecture du port
 port = pt.Port()
 port.bdd = utilisateur
 port.selectionner_port()
 port.lire_port()
-
-
-# Ok, testons pour DHT22 la création de table
-# capteur = dht22.DHT22()
-# capteur.bdd = utilisateur
-# capteur.creer_table()
-
-

@@ -10,7 +10,7 @@ class Capteur():
     # Date de la mesure initiale (t0 est initialisé une seule fois lors de la création de l'instance)
     t0 = datetime.now()
     # Rq : le répertoire de travail est celui où se situe le main
-    csv = "DHT22_" + str(t0)
+    # csv = "DHT22_" + str(t0) #Edit ne sert jamais
 
     def afficher_console(self, ligne):
         """Affiche pour chaque ligne lue le message à faire apparaître dans la console"""
@@ -47,7 +47,7 @@ class Capteur():
 
         ligne = ligne.split(" ")
         separateur_csv = ";"  # C'est plus explicite
-        # conversion timestamp -> str (afin de l'utiliser pour nommer le fichier)
+        # Conversion timestamp -> str (afin de l'utiliser pour nommer le fichier)
         date = datetime.strftime(self.t0, '%Y-%m-%d_%H-%M-%S')
         # Ouverture en mode 'append' pour ne pas écraser le contenu du fichier à chaque appel de la méthode
         fichier = open("Capteurs/DHT22/csv/DHT22_" + date + ".csv", 'a')
@@ -57,7 +57,6 @@ class Capteur():
         # edit : en pratique pas nécessaire
 
     def creer_table(self):
-        print("Lancement de la fonction")
         # Lecture du fichier contenant le script
         try:
             script = open("Capteurs/DHT22/table_DHT22.sql", "r")
@@ -77,6 +76,6 @@ class Capteur():
     #     data = [float(champs[0]), float(champs[1]), float(champs[2]), int(champs[3])]
     #     # (humidité, température, indice de chaleur, temps écoulé)
     #     return data
-    # # Pas sûr qu'elle aide tant que ça, puisque je sais pas si on peut remplacr des
+    # # Pas sûr qu'elle aide tant que ça, puisque je sais pas si on peut remplacer des {} dans des str à l'aide d'une liste
 
 #print("Hello de DHT22")
