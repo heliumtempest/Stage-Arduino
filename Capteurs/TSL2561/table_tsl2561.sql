@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS public.tsl2561
 (
-    "DateMesure" time without time zone,
+    "DateMesure" timestamp without time zone,
     "Lux" integer,
     "LuminositeIR" integer,
     "Luminosite" integer,
