@@ -1,5 +1,6 @@
 import psycopg2
 
+# TODO nettoyer les commmentaires à l'occasion
 class ConnexionPostgres:
 
     serveur = ""
@@ -39,18 +40,18 @@ class ConnexionPostgres:
             print("Verifier les paramètres de connexion")
             exit()
 
-
     def executer_requete(self, requete_sql):
         """Utilise une connexion afin d'executer une requête SQL sur la base de données"""
         #Rq : Je crois que ça ne peut executer qu'une seule requête, il y a une erreur s'il y en a plusieurs
-
+        # Établissement d'une connexion avec la abse de données
         connexion = self.connexion_bdd()
-        #Rq : j'ai déjà un try/except dans la fonction de connexion
+        # Rq : Il y a une gestion d'exception pour la fonction connexion_bdd
+        # Éxécution de la requête
         try:
             curseur = connexion.cursor()
             curseur.execute(requete_sql)
             connexion.commit()
-            curseur.close() #!
+            curseur.close()
             connexion.close()
         #except psycopg2.OperationalError:
         except:
@@ -58,3 +59,13 @@ class ConnexionPostgres:
             print("La requête était : ", requete_sql)
             raise
         #TODO : cas d'une colonne n'éxistant pas : psycopg2.errors.UndefinedColumn
+
+
+    # TODO un autre intérêt que le débug ?
+    def afficher_info(self):
+        """Affiche les différentes informations de connexion"""
+        print("Serveur :", self.serveur)
+        print("Utilisateur :", self.utilisateur)
+        print("Mdp :", self.mot_de_passe) #TODO le joli mdp en clair
+        print("BDD :", self.base_de_donnees)
+

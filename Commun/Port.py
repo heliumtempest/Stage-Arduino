@@ -9,6 +9,7 @@ class Port:
     baud = 9600  # A specifier si besoin
     port = None
     bdd = None #TODO voir comment faire ça plus efficacement
+    textBoxQT = None
 
     def selectionner_port(self):
         liste_ports = serial.tools.list_ports.comports(include_links=False)
@@ -17,15 +18,15 @@ class Port:
             print("Aucun port n'a été trouvé")
             exit()
         elif(nombre_ports == 1):
+            # Assignation du port par le seul port trouvé
             self.port = liste_ports[0]
             print("Un port trouvé : ", self.port.name)
-            #self.choix_port = 0
-
         else: # Plus de 1 port
             print("Port disponibles :")
             num_port = 0
             for port in liste_ports:
                 print("Port n°", num_port, ":", port.name)
+            # Demande à l'utilisateur de choisir un port
             choix_port = input("Choix du numéro de port à sélectionner : ")
             self.port = liste_ports[int(choix_port)]
 
@@ -55,10 +56,12 @@ class Port:
         print("Nom du programme arduino :", id_programme)
         # Importation du module python correspondant
         # Attention à bien vérifier l'exactitude des noms
-        module = "Capteurs." + id_programme + "." + id_programme
-        cl_cpt = importlib.import_module(module)
-        cpt = cl_cpt.Capteur()
+        module = "Capteurs." + id_programme + "." + id_programme  # Nom du répertoire correspondant
+        cl_cpt = importlib.import_module(module)  # Importation du module à partir du nom de répértoire
+        cpt = cl_cpt.Capteur()  # Instanciation d'un objet pour le capteur
         # TODO je ne sais pas si une telle erreur est réalisable
+
+        # TODO je vais essayer de prendre la bdd sans passer par le port
         if(self.bdd != None):
             cpt.bdd = self.bdd
         else:
@@ -66,11 +69,13 @@ class Port:
             exit()
 
         # Création de la table (si elle n'existe pas déjà)
+        # Le script SQL doit comporter l'instruction 'CREATE TABLE IF NOT EXISTS'
+        # TODO l'exception est pas déjà gérée sur 'creer_table()' ?
         try:
             cpt.creer_table()
         except:
-            print("Échec de la procédure creer_table() de la table")
-            raise
+            print("Échec de la procédure creer_table()")
+            #raise
             exit()
 
         # Lecture en continu du reste des données
@@ -88,6 +93,32 @@ class Port:
             print("Lecture interrompue")
             raise
             exit()
+
+    # TODO C'est une fonction pour QT, à voir si elle nous est utile
+    def ports_dispo(self):
+        """Retourne la liste des noms de ports disponibles"""
+        # Recherche les ports disponibles
+        liste_ports = serial.tools.list_ports.comports(include_links=False)
+        liste_noms = []
+        for port in liste_ports:
+            liste_noms.append(str(port.name))
+        if len(liste_ports) < 1:
+            liste_noms.append("Aucun port détecté")
+        return liste_noms
+
+    # TODO idem, juste pour QT
+    def assigner_port(self, nom_port):
+        """Assigne l'attribur 'port' à l'objet à partir du nom su port"""
+        if(nom_port == "Aucun port détecté"):
+            exit() #TODO c'est un peu radical
+        else:
+            liste_ports = serial.tools.list_ports.comports(include_links=False)
+            for port in liste_ports: #TODO il y a peut-être moyen de mieux coder ça
+                if port.name == nom_port:
+                    self.port = port
+
+
+
 
 # Exception lorsque le port est débranché :
 # raise SerialException("ClearCommError failed ({!r})".format(ctypes.WinError()))

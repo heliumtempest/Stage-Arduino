@@ -9,8 +9,25 @@ class Capteur():
     bdd = None
     # Date de la mesure initiale (t0 est initialisé une seule fois lors de la création de l'instance)
     t0 = datetime.now()
-    # Rq : le répertoire de travail est celui où se situe le main
-    # csv = "DHT22_" + str(t0) #Edit ne sert jamais
+
+    # TODO tester la nouvelle version avec le chemin en attribut
+    chemin_csv = "Capteurs/DHT22/csv/DHT_22" + datetime.strftime(t0, '%Y-%m-%d_%H-%M-%S') + ".csv"
+    # Écriture du header
+    fichier = open(chemin_csv, 'a')
+    fichier.write("Humidite;Temperature;Indice de chaleur;Tecoule")
+    fichier.close()
+
+    def __init__(self):
+        # TODO tester si ça marche (notamment pour le csv)
+        self.bdd = None
+        self.t0 = datetime.now()
+        self.chemin_csv = "Capteurs/DHT22/csv/DHT_22" + datetime.strftime(self.t0, '%Y-%m-%d_%H-%M-%S') + ".csv"
+
+        # Création et écriture de l'entête du fichier csv
+        entete = "Humidite;Temperature;Indice de chaleur;Tecoule"
+        csv = open(self.chemin_csv, 'a')
+        csv.write(entete)
+        csv.close()
 
     def afficher_console(self, ligne):
         """Affiche pour chaque ligne lue le message à faire apparaître dans la console"""
@@ -43,14 +60,16 @@ class Capteur():
 
     def ecrire_csv(self, ligne):
         """Écrit une ligne dans le fichier csv qui correspond à la ligne lue depuis le capteur"""
+        # TODO j'ai un peu rectifié la fonction afin d'avoir le chemin en attribut
         # Attention : ouvrir le fichier pendant son écriture générera une erreur
 
         ligne = ligne.split(" ")
         separateur_csv = ";"  # C'est plus explicite
-        # Conversion timestamp -> str (afin de l'utiliser pour nommer le fichier)
-        date = datetime.strftime(self.t0, '%Y-%m-%d_%H-%M-%S')
+        # # Conversion timestamp -> str (afin de l'utiliser pour nommer le fichier)
+        # date = datetime.strftime(self.t0, '%Y-%m-%d_%H-%M-%S')
         # Ouverture en mode 'append' pour ne pas écraser le contenu du fichier à chaque appel de la méthode
-        fichier = open("Capteurs/DHT22/csv/DHT22_" + date + ".csv", 'a')
+        #fichier = open("Capteurs/DHT22/csv/DHT22_" + date + ".csv", 'a')
+        fichier = open(self.chemin_csv, 'a')
         fichier.write(separateur_csv.join(ligne) + "\n")
         # Fermeture du fichier
         fichier.close()

@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 class Capteur:
 
     def __init__(self, **kwargs):
-        # TODO donner la possibilité de passer la bdd en param du constructeur (quoique?
+        # TODO donner la possibilité de passer la bdd en param du constructeur (quoique?)
+        # TODO j'ai pas contrôlé si le CSV s'écrivait bien
         self.bdd = None  # Indique la connexion vers la base de données (à affecter après l'instanciation de l'objet)
         self.t0 = datetime.now()  # Timestamp
         self.requete = "INSERT INTO TSL2561(\"Lux\", \"LuminositeIR\", \"Luminosite\", \"DateMesure\") " \
