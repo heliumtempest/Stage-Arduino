@@ -1,8 +1,9 @@
 import psycopg2
-
 # TODO nettoyer les commmentaires à l'occasion
 class ConnexionPostgres:
 
+    # Attributs statiques
+    # Rq : il est possible d'accéder à ces attributs par une instance, ou par la classe elle-même
     serveur = ""
     utilisateur = ""
     mot_de_passe = ""
@@ -10,17 +11,19 @@ class ConnexionPostgres:
 
     def saisie_param(self):
         """Permet à l'utilisateur de saisir les différents paramètres de connexion"""
-        self.serveur = input("Adresse du serveur : ")
-        self.utilisateur = input("Nom de l'utilisateur : ")
-        self.mot_de_passe = input("Mot de passe : ")  # Un mdp devrait pas être en clair mais tant pis
-        self.base_de_donnees = input("Nom de la base de données : ")
+        # Modification des attributs statiques
+        ConnexionPostgres.serveur = input("Adresse du serveur : ")
+        ConnexionPostgres.utilisateur = input("Nom de l'utilisateur : ")
+        ConnexionPostgres.mot_de_passe = input("Mot de passe : ")  # Un mdp devrait pas être en clair mais tant pis
+        ConnexionPostgres.base_de_donnees = input("Nom de la base de données : ")
 
     def defaut_param(self):
         """Initialise les informations de connexion à des valeurs par défaut"""
-        self.serveur = "127.0.0.1"
-        self.utilisateur = "postgres"
-        self.mot_de_passe = "admin"
-        self.base_de_donnees = "arduino"
+        # Modification des attributs statiques
+        ConnexionPostgres.serveur = "127.0.0.1"
+        ConnexionPostgres.utilisateur = "postgres"
+        ConnexionPostgres.mot_de_passe = "admin"
+        ConnexionPostgres.base_de_donnees = "arduino"
 
     def connexion_bdd(self):
         """Initialise une connexion vers la base de données"""
@@ -28,10 +31,10 @@ class ConnexionPostgres:
         # Rq2 : la connexion semble se faire même si le serveur n'est pas démarré (wow!)
         try:
             connexion = psycopg2.connect(
-                host=self.serveur,
-                user=self.utilisateur,
-                password=self.mot_de_passe,
-                database=self.base_de_donnees
+                host=ConnexionPostgres.serveur,
+                user=ConnexionPostgres.utilisateur,
+                password=ConnexionPostgres.mot_de_passe,
+                database=ConnexionPostgres.base_de_donnees
             )
             #print("Connexion effectuée")
             return connexion
@@ -62,10 +65,11 @@ class ConnexionPostgres:
 
 
     # TODO un autre intérêt que le débug ?
+    # Oui, au début pour indiquer quels sont les param par défaut (et puis, elle fait du tort à personne)
     def afficher_info(self):
         """Affiche les différentes informations de connexion"""
-        print("Serveur :", self.serveur)
-        print("Utilisateur :", self.utilisateur)
-        print("Mdp :", self.mot_de_passe) #TODO le joli mdp en clair
-        print("BDD :", self.base_de_donnees)
+        print("Serveur :", ConnexionPostgres.serveur)
+        print("Utilisateur :", ConnexionPostgres.utilisateur)
+        print("Mdp :", ConnexionPostgres.mot_de_passe) #TODO le joli mdp en clair (est-ce grave pour autant dans notre contexte)
+        print("BDD :", ConnexionPostgres.base_de_donnees)
 
