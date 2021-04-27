@@ -1,17 +1,28 @@
-import psycopg2
+try:
+    # Le module psycopg2 n'est pas présent dans les modules fournis de base et doit être installé
+    import psycopg2
+except ModuleNotFoundError:  # Le module n'est pas installé
+    # Installation automatique du module
+    import subprocess
+    import sys
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "psycopg2"])
+
+
 # TODO nettoyer les commmentaires à l'occasion
 class ConnexionPostgres:
+    # """Classe qui contient les différentes informations de connexion vers la base de données où seront insérées les
+    # mesures rélisées par les capteurs. """
 
     # Attributs statiques
     # Rq : il est possible d'accéder à ces attributs par une instance, ou par la classe elle-même
-    serveur = ""
+    serveur = ""  # Adresse IP du serveur
     utilisateur = ""
     mot_de_passe = ""
     base_de_donnees = ""
     nom_session = "" # TODO trouber un nom de session potentiellement intéressant par défaut QUOIQUE param != nom de session
 
     def saisie_param(self):
-        """Permet à l'utilisateur de saisir les différents paramètres de connexion"""
+        """Permet à l'utilisateur de saisir les différents paramètres de connexion."""
         # Modification des attributs statiques
         ConnexionPostgres.serveur = input("Adresse du serveur : ")
         ConnexionPostgres.utilisateur = input("Nom de l'utilisateur : ")
@@ -19,7 +30,7 @@ class ConnexionPostgres:
         ConnexionPostgres.base_de_donnees = input("Nom de la base de données : ")
 
     def defaut_param(self):
-        """Initialise les informations de connexion à des valeurs par défaut"""
+        """Initialise les informations de connexion à des valeurs par défaut."""
         # Modification des attributs statiques
         ConnexionPostgres.serveur = "127.0.0.1"
         ConnexionPostgres.utilisateur = "postgres"
@@ -27,6 +38,8 @@ class ConnexionPostgres:
         ConnexionPostgres.base_de_donnees = "arduino"
 
     def saisir_nom_session(self):
+        """Demande à l'utilisateur de saisir le nom de la session de mesure, afin de compléter le champ associé dans
+         la base de données."""
         # TODO (c'est jsute une petite remarque)
         # La saisie du nom de session ne sefait pas au niveau des autres paramètres, puisque ça n'a rien à voir avec
         # et la connexion est d'abord testée avant de demander le nom de session
@@ -43,7 +56,6 @@ class ConnexionPostgres:
                 password=ConnexionPostgres.mot_de_passe,
                 database=ConnexionPostgres.base_de_donnees
             )
-            #print("Connexion effectuée")
             return connexion
         except psycopg2.OperationalError:
             print("Échec de la connexion à la base de données")
@@ -51,7 +63,7 @@ class ConnexionPostgres:
             exit()
 
     def executer_requete(self, requete_sql):
-        """Utilise une connexion afin d'executer une requête SQL sur la base de données"""
+        """Utilise une connexion afin d'executer une requête SQL sur la base de données."""
         #Rq : Je crois que ça ne peut executer qu'une seule requête, il y a une erreur s'il y en a plusieurs
         # Établissement d'une connexion avec la abse de données
         connexion = self.connexion_bdd()
@@ -77,11 +89,8 @@ class ConnexionPostgres:
         #TODO : cas d'une requête avec une erreur de syntaxe : psycopg2.errors.SyntaxError
         #TODO : erreur bloquante ou non ?
 
-
-    # TODO un autre intérêt que le débug ?
-    # Oui, au début pour indiquer quels sont les param par défaut (et puis, elle fait du tort à personne)
     def afficher_info(self):
-        """Affiche les différentes informations de connexion"""
+        """Affiche les différentes informations de connexion dans la console."""
         print("Serveur :", ConnexionPostgres.serveur)
         print("Utilisateur :", ConnexionPostgres.utilisateur)
         print("Mdp :", ConnexionPostgres.mot_de_passe) #TODO le joli mdp en clair (est-ce grave pour autant dans notre contexte)

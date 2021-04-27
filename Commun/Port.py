@@ -1,10 +1,14 @@
-import serial.tools.list_ports
-import serial.serialutil  # Pour l'exception relative au port débranché
-# Je crois qu'il faut installer 'pyserial' avant
+try:
+    import serial.tools.list_ports
+    import serial.serialutil  # Pour l'exception relative au port débranché
+except ModuleNotFoundError:
+    # Installation du module 'pyserial' s'il n'est pas présent
+    import subprocess
+    import sys
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pyserial"])
+
 import time
 import importlib
-#TODO modification pour la co en static
-#import Commun.CPG_Static
 
 # TODO le code est pas très "propre"
 # TODO faire des try/except un peu partout
@@ -13,9 +17,6 @@ class Port:
     def __init__(self):
         self.baud = 9600
         self.port = None
-        #self.bdd = None  # TODO voir comment faire ça plus efficacement
-        # TODO utilisation de la co en static => plus besoin de la transmettre
-        #self.bdd = Commun.CPG_Static.ConnexionPostgres()
         self.textBoxQT = None  # TODO à voir comment on gère les fenêtres
 
     def selectionner_port(self):

@@ -1,18 +1,20 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from Capteurs.CapteurInterface import CapteurInterface as GenCapt  # Pour CapteurGeneral
 
 class Capteur(GenCapt):
+    """Classe qui représente le capteur TSL2561 qui mesure l'intensité lumineuse."""
 
     def __init__(self):
         super().__init__()  # Appel du constructeur (__init__) de l'interface
-        self.requete = "INSERT INTO TSL2561(\"Session\",\"Lux\", \"LuminositeIR\", \"Luminosite\", \"DateMesure\") " \
-                       "VALUES ('{S}', {L}, {IR}, {Lum}, '{ts}');"
         # Requête SQL (à formater) pour ajouter un enregistrement dans la base de données
         # Des " autour des noms de colonnes sont nécessaires dans la requête SQL (cf. le script de création de la table)
-
+        # ainsi qu'autour du timestamp est des chaînes de caractères / varchar
+        self.requete = "INSERT INTO TSL2561(\"Session\",\"Lux\", \"LuminositeIR\", \"Luminosite\", \"DateMesure\") " \
+                       "VALUES ('{S}', {L}, {IR}, {Lum}, '{ts}');"
+        # Chaîne de caractère à formater pour l'affichage au niveau de la console
+        self.affichage_console = "Lux : {L}, Luminosité (IR) : {IR}, Luminosité (Spectre entier) : {SE}, T0+{ms}ms"
         # Nom du fichier .csv à créer (nom capteur + date et heure du jour)
-        self.chemin_csv = "Capteurs/TSL2561/csv/TSL2561_" + datetime.strftime(self.t0, '%Y-%m-%d_%H-%M-%S') + ".csv"
-        # Le timestamp est formaté (les ':' dans le timestamp initial ne peuvent être utilisé dans un nom de fichier)
+        self.chemin_csv = "Capteurs/TSL2561/csv/TSL2561_" + self.t0_str + ".csv"
 
         # Création du fichier et écriture de l'entête
         header = "Lux;LumIR;Lum;Tec\n"
@@ -22,8 +24,7 @@ class Capteur(GenCapt):
 
     def afficher_console(self, ligne):
         champs = ligne.split(" ")
-        affichage = "Lux : {L}, Luminosité (IR) : {IR}, Luminosité (Spectre entier) : {SE}, T0+{ms}ms".format(
-            L=champs[0], IR=champs[1], SE=champs[2], ms=champs[3])
+        affichage = self.affichage_console.format(L=champs[0], IR=champs[1], SE=champs[2], ms=champs[3])
         print(affichage)
 
     def inserer_bdd(self, ligne):
@@ -38,13 +39,13 @@ class Capteur(GenCapt):
         self.bdd.executer_requete(sql)
 
     def ecrire_csv(self, ligne):
-        """Formate une ligne reçue du capteur afin de l'écrire dans le fichier csv"""
+        """Formate une ligne reçue du capteur afin de l'écrire dans le fichier csv."""
         csv = open(self.chemin_csv, 'a')
         csv.write(ligne.replace(" ", ";") + "\n")  # Convertit les espaces dans la ligne lue par des ; et ajoute un saut de ligne en fin de ligne
         csv.close()
 
     def creer_table(self):
-        """Execute le script de création de la base de données"""
+        """Execute le script de création de la base de données."""
         # Cette méthode est systematiquement éxécutée après l'importation du module
         try:
             # Ouvre le fichier contenant le script à l'emplacement scpécifié
