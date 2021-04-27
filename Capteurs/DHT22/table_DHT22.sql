@@ -1,13 +1,13 @@
-CREATE TABLE IF NOT EXISTS DHT22
+CREATE TABLE IF NOT EXISTS dht22
 (
-    Temperature double precision,
+    id serial NOT NULL,
+    Session character varying,
+    Date timestamp without time zone,
     Humidite double precision,
-    DateMesure timestamp without time zone,
+    Temperature double precision,
     Indice double precision,
-    PRIMARY KEY (DateMesure)
+    PRIMARY KEY (id)
 );
 
-ALTER TABLE DHT22
+ALTER TABLE public.dht22
     OWNER to postgres;
-
--- Remarque : les noms de table/colonnes sont tous mis en 'lowercase'

@@ -1,8 +1,10 @@
 import serial.tools.list_ports
-import serial.serialutil # Pour l'exception relative au port débranché
+import serial.serialutil  # Pour l'exception relative au port débranché
 # Je crois qu'il faut installer 'pyserial' avant
 import time
 import importlib
+#TODO modification pour la co en static
+#import Commun.CPG_Static
 
 # TODO le code est pas très "propre"
 # TODO faire des try/except un peu partout
@@ -11,10 +13,14 @@ class Port:
     def __init__(self):
         self.baud = 9600
         self.port = None
-        self.bdd = None  # TODO voir comment faire ça plus efficacement
+        #self.bdd = None  # TODO voir comment faire ça plus efficacement
+        # TODO utilisation de la co en static => plus besoin de la transmettre
+        #self.bdd = Commun.CPG_Static.ConnexionPostgres()
         self.textBoxQT = None  # TODO à voir comment on gère les fenêtres
 
     def selectionner_port(self):
+        # Rq : aucune connexion avec le port n'est établie dans cette fonction
+        # Lister les ports détectés
         liste_ports = serial.tools.list_ports.comports(include_links=False)
         nombre_ports = len(liste_ports)
         if(nombre_ports == 0):
@@ -42,6 +48,7 @@ class Port:
                 print("Veuillez saisir un numéro valide")
 
     def lire_port(self):
+        '''Lit en continu les informations reçues par le port en série'''
         #port = self.selectionner_port()
         #print("Connexion au port : ", self.port)
 
@@ -51,6 +58,7 @@ class Port:
             print("Fermeture de l'appli")
             exit()
 
+        # Connexion au port (qui a été assigné avec la focntion selectionner_port())
         arduino = serial.Serial(self.port.device, baudrate=self.baud)
         print('Connexion au port ' + arduino.name + ' à une vitesse en baud de ' + str(self.baud))
 
@@ -67,6 +75,7 @@ class Port:
         id_programme = ligne_1[:-2]  # Retrait du '\n' de fin de ligne
         # Identification du programme arduino
         print("Nom du programme arduino :", id_programme)
+        # TODO les trucs pout QT, à voir comment organiser le tout
         if self.textBoxQT is not None:
             self.textBoxQT.setText("Nom du programme arduino :" + id_programme)
         # Importation du module python correspondant
@@ -91,13 +100,14 @@ class Port:
         # TODO je ne sais pas si une telle erreur est réalisable
         # TODO je vais essayer de prendre la bdd sans la transmettre du main vers le port
         #Edit : ça risque d'être inutilement complexe
-        if(self.bdd != None):
-            cpt.bdd = self.bdd
-        else:
-            print("Erreur : connexion vers la base de données invalide")
-            exit()
+        # TODO modification pour la co en static
+        # if(self.bdd != None):
+        #     cpt.bdd = self.bdd
+        # else:
+        #     print("Erreur : connexion vers la base de données invalide")
+        #     exit()
 
-        # Création de la table (si elle n'existe pas déjà)
+        # Création de la table (si elle n'existe pas déjà) (ou éventuellement des tables)
         # Le script SQL doit comporter l'instruction 'CREATE TABLE IF NOT EXISTS'
         # TODO l'exception est pas déjà gérée sur 'creer_table()' ?
         # Edit : oui, mais c'est possible de déclarer la méthode, mais avec des arguments non conformes à son utilisation ici
@@ -111,13 +121,14 @@ class Port:
         except:
             print("Echec de la procédure creer_table()")
             print("Cause possible : l'implémentation de la fonction génère une erreur")
+            raise
             # C'est à dire tout type d'erreur que peut renvoyer Python lors d'une execution invalide
             # Difficile de donner plus d'indication. Débugger la fonction (afficher des variables, executer des
             # morceaux de code, ...)
 
         # Lecture en continu du reste des données
         try:
-            while True:
+            while True:  # Boucle infinie, elle est interrompue seulement en cas d'erreur (p.ex. port débranché)
                 ligne = arduino.readline().decode("utf-8")
                 ligne = ligne[:-2]  # Retrait du '\n' de fin de ligne
                 if ligne != "":

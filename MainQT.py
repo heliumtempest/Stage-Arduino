@@ -2,7 +2,7 @@
 # pip install pyside6
 from PySide6 import QtCore
 from PySide6.QtWidgets import *
-from PySide6.QtGui import * # Il a changé de place... (les QActions)
+from PySide6.QtGui import *  # Il a changé de place le bougre (les QActions)
 import sys
 import Commun.Port
 import Forms.ParamBDD
@@ -31,10 +31,8 @@ class MainWindow(QMainWindow):
         barreMenu = QMenuBar()
         menuParametre = barreMenu.addMenu("Paramètres")
         menuBDD = menuParametre.addAction(action_ouvrirParamBDD)
-        #menuParametre.addAction("Capteur") #Utilité
+        #menuParametre.addAction("Capteur") #Utilité?
         self.setMenuBar(barreMenu)
-
-        # On essaie de faire ces ptn d'action
 
         # Assigner à la classe port la 'textEdit' afin de pouvoir écrire dessus
         self.port.textBoxQT = self.affichageTextedit
@@ -64,6 +62,8 @@ class MainWindow(QMainWindow):
         self.connexionButton.clicked.connect(self.connexion)
 
 
+    # TODO je sais pas si les @Slot sont nécessaires, j'ai vu des exemples de code sans
+
     @QtCore.Slot()
     def actualisation(self):
         self.portsCombobox.clear()
@@ -73,7 +73,8 @@ class MainWindow(QMainWindow):
     def connexion(self):
         nom_port = self.portsCombobox.currentText()
         self.port.assigner_port(nom_port)
-        self.port.bdd = self.fenetre.pg # TODO c'est pas très clair sans contexte
+        self.port.bdd = self.fenetre.pg # TODO c'est pas très clair sans contexte (faisable dans le init ?)
+        #self.port.textBoxQT = self.affichageTextedit # Déjà fait dans le unit
         self.port.lire_port()
 
     @QtCore.Slot()

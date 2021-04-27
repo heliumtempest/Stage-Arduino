@@ -8,6 +8,7 @@ class ConnexionPostgres:
     utilisateur = ""
     mot_de_passe = ""
     base_de_donnees = ""
+    nom_session = "" # TODO trouber un nom de session potentiellement intéressant par défaut QUOIQUE param != nom de session
 
     def saisie_param(self):
         """Permet à l'utilisateur de saisir les différents paramètres de connexion"""
@@ -24,6 +25,12 @@ class ConnexionPostgres:
         ConnexionPostgres.utilisateur = "postgres"
         ConnexionPostgres.mot_de_passe = "admin"
         ConnexionPostgres.base_de_donnees = "arduino"
+
+    def saisir_nom_session(self):
+        # TODO (c'est jsute une petite remarque)
+        # La saisie du nom de session ne sefait pas au niveau des autres paramètres, puisque ça n'a rien à voir avec
+        # et la connexion est d'abord testée avant de demander le nom de session
+        ConnexionPostgres.nom_session = input("Nom de la session de mesure : ")
 
     def connexion_bdd(self):
         """Initialise une connexion vers la base de données"""
@@ -57,11 +64,18 @@ class ConnexionPostgres:
             curseur.close()
             connexion.close()
         #except psycopg2.OperationalError:
+        except psycopg2.errors.SyntaxError as err:
+            print("Erreur de syntaxe au niveau de la requête")
+            print("La requête était : ", requete_sql)
+            print(str(err))
+            # TODO c'est un peu lourd au niveau affichage de la console
         except:
             print("Echec le l'execution de la requete")
             print("La requête était : ", requete_sql)
             raise
         #TODO : cas d'une colonne n'éxistant pas : psycopg2.errors.UndefinedColumn
+        #TODO : cas d'une requête avec une erreur de syntaxe : psycopg2.errors.SyntaxError
+        #TODO : erreur bloquante ou non ?
 
 
     # TODO un autre intérêt que le débug ?
