@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
         mainWidget.setLayout(layout)
         self.setCentralWidget(mainWidget)
 
-        # Assignation des fonctions des boutons #TODO mieux formuler
+        # Affectation d'une fonction aux différents boutons
         self.actualiserButton.clicked.connect(self.actualisation)
         self.connexionButton.clicked.connect(self.connexion)
 

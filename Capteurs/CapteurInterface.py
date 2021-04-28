@@ -1,33 +1,35 @@
 import abc
 from datetime import datetime
-# TODO Possible de seulement prendre now() ?
 import Commun.ConnexionPostgres as cpg
-# TODO modification pour la co en static
 
 
 class CapteurInterface(metaclass=abc.ABCMeta):
+    """Classe abstraite qui contient des méthodes à implémenter pour tous les capteurs ainsi que certains attributs."""
 
-    # TODO modification pour la co en static
-    # En espérant que la BDD soit héritée des classes filles
-    # Sinon, on peut essayer une méthode GetBdd (pas abstraite cette fois)
     def __init__(self):
-        # Il semble que c'est un échec
-        self.bdd = cpg.ConnexionPostgres()
-        self.t0 = datetime.now()
-        self.t0_str = datetime.strftime(self.t0, '%Y-%m-%d_%H-%M-%S')
+        self.bdd = cpg.ConnexionPostgres()  # Connexion vers la base de données
+        self.t0 = datetime.now()  # Timestamp qui correspond au moment de l'instanciation de la classe (ou de ses classes filles)
+        self.t0_str = datetime.strftime(self.t0, '%Y-%m-%d_%H-%M-%S')  # Conversion du timestamp en chaîne de caractère
+        # Remarque : pour que ces attributs soient hérités dans les classes filles, leur contructeur (__init__) doit
+        # comporter l'instruction : super().__init__()
 
     @abc.abstractmethod
     def afficher_console(self, ligne):
+        """Affiche pour la ligne lue en provenence du capteur le message à faire apparaître dans la console."""
         pass
 
     @abc.abstractmethod
     def ecrire_csv(self, ligne):
+        """Écrit une ligne dans le fichier csv qui correspond à la ligne lue depuis le capteur."""
         pass
 
     @abc.abstractmethod
     def inserer_bdd(self, ligne):
+        """Ajoute pour chaque ligne lue en provenence du capteur l'enregestriment associé dans la base de données."""
         pass
 
     @abc.abstractmethod
     def creer_table(self):
+        """Execute le script qui correspond à la création de la table contenant les mesures du capteurs dans la base de
+        données."""
         pass

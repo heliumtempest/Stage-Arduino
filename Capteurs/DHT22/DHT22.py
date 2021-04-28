@@ -42,7 +42,7 @@ class Capteur(GenCap):
         self.bdd.executer_requete(requete)
 
     def ecrire_csv(self, ligne):
-        """Écrit une ligne dans le fichier csv qui correspond à la ligne lue depuis le capteur"""
+        """Écrit une ligne dans le fichier csv qui correspond à la ligne lue depuis le capteur."""
         # Attention : ouvrir le fichier pendant son écriture générera une erreur
         # Récupérer les données sous forme d'une liste
         donnees = ligne.split(" ")
@@ -54,7 +54,7 @@ class Capteur(GenCap):
 
     def creer_table(self):
         """Execute le script qui correspond à la création de la table contenant les mesures du capteurs dans la base de
-        données"""
+        données."""
         # Lecture du fichier contenant le script
         try:
             script = open("Capteurs/DHT22/table_DHT22.sql", "r")

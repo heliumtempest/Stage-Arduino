@@ -10,12 +10,13 @@ except ModuleNotFoundError:
 import time
 import importlib
 
+
 # TODO le code est pas très "propre"
 # TODO faire des try/except un peu partout
 class Port:
 
     def __init__(self):
-        self.baud = 9600
+        self.baud = 9600  # TODO donner la possibilité de modifier la valeur
         self.port = None
         self.textBoxQT = None  # TODO à voir comment on gère les fenêtres
 
@@ -31,7 +32,7 @@ class Port:
             # Assignation du port par le seul port trouvé
             self.port = liste_ports[0]
             print("Un port trouvé : ", self.port.name)
-        else:  # Plus de 1 port
+        else:  # Plusieurs ports disponibles
             print("Port disponibles :")
             num_port = 0
             for port in liste_ports:
@@ -49,7 +50,7 @@ class Port:
                 print("Veuillez saisir un numéro valide")
 
     def lire_port(self):
-        '''Lit en continu les informations reçues par le port en série'''
+        """Lit en continu les informations reçues par le port en série"""
         #port = self.selectionner_port()
         #print("Connexion au port : ", self.port)
 
@@ -79,7 +80,7 @@ class Port:
         # TODO les trucs pout QT, à voir comment organiser le tout
         if self.textBoxQT is not None:
             self.textBoxQT.setText("Nom du programme arduino :" + id_programme)
-        # Importation du module python correspondant
+        # Importation du module python correspondant à partir du nom de programme
         # Attention à bien vérifier l'exactitude des noms
         module = "Capteurs." + id_programme + "." + id_programme  # Nom du répertoire correspondant
         cpt = None  # Déclaration de la variable avant son assignation
@@ -98,18 +99,7 @@ class Port:
             raise  # Affiche le message d'erreur associé, qui indique quelle méthode n'est pas implémentée
             exit()
 
-        # TODO je ne sais pas si une telle erreur est réalisable
-        # TODO je vais essayer de prendre la bdd sans la transmettre du main vers le port
-        #Edit : ça risque d'être inutilement complexe
-        # TODO modification pour la co en static
-        # if(self.bdd != None):
-        #     cpt.bdd = self.bdd
-        # else:
-        #     print("Erreur : connexion vers la base de données invalide")
-        #     exit()
 
-        # Création de la table (si elle n'existe pas déjà) (ou éventuellement des tables)
-        # Le script SQL doit comporter l'instruction 'CREATE TABLE IF NOT EXISTS'
         # TODO l'exception est pas déjà gérée sur 'creer_table()' ?
         # Edit : oui, mais c'est possible de déclarer la méthode, mais avec des arguments non conformes à son utilisation ici
         try:
@@ -134,7 +124,7 @@ class Port:
                 ligne = ligne[:-2]  # Retrait du '\n' de fin de ligne
                 if ligne != "":
                     # Opérations liées au capteur
-                    #TODO on pourrait un peu uniformiser les noms genrt=e : ecrire_console ; ecrire_bdd ; ecrire_csv
+                    #TODO on pourrait un peu uniformiser les noms genre : ecrire_console ; ecrire_bdd ; ecrire_csv
                     cpt.afficher_console(ligne)
                     cpt.inserer_bdd(ligne)
                     cpt.ecrire_csv(ligne)
@@ -148,7 +138,7 @@ class Port:
 
     # TODO C'est une fonction pour QT, à voir si elle nous est utile
     def ports_dispo(self):
-        """Retourne la liste des noms de ports disponibles"""
+        """Retourne la liste des noms de ports disponibles."""
         # Recherche les ports disponibles
         liste_ports = serial.tools.list_ports.comports(include_links=False)
         liste_noms = []
@@ -160,7 +150,7 @@ class Port:
 
     # TODO idem, juste pour QT
     def assigner_port(self, nom_port):
-        """Assigne l'attribur 'port' à l'objet à partir du nom su port"""
+        """Assigne l'attribur 'port' à l'objet à partir du nom su port."""
         if(nom_port == "Aucun port détecté"):
             exit() #TODO c'est un peu radical
         else:
@@ -176,13 +166,3 @@ class Port:
         self.textBoxQT.setPlainText(texte + ligne)
         print("Ecriture dans la box")
         #return
-
-
-# Exception lorsque le port est débranché :
-# raise SerialException("ClearCommError failed ({!r})".format(ctypes.WinError()))
-# serial.serialutil.SerialException: ClearCommError failed (PermissionError(13, 'Le périphérique ne reconnaît pas la commande.', None, 22))
-
-# Zone pour test
-# test = Port()
-# test.selectionner_port()
-# test.lire_port()
