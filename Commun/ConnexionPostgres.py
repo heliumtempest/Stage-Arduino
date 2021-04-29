@@ -81,12 +81,14 @@ class ConnexionPostgres:
             print("La requête était : ", requete_sql)
             print(str(err))
             # TODO c'est un peu lourd au niveau affichage de la console
+        except psycopg2.errors.UndefinedColumn:
+            print("Nom de colonne non reconnu. La requête était :\n", requete_sql)
+            # Une cause possible est l'absence de " autour des noms de la colonnes (cf. script de création de table)
         except:
             print("Echec le l'execution de la requete")
             print("La requête était : ", requete_sql)
             raise
-        #TODO : cas d'une colonne n'éxistant pas : psycopg2.errors.UndefinedColumn
-        #TODO : cas d'une requête avec une erreur de syntaxe : psycopg2.errors.SyntaxError
+        #TODO : psycopg2.OperationalError (je crois que ça m'est arrivé lorsqu'aucune BDD n'était dispo)
         #TODO : erreur bloquante ou non ?
 
     def afficher_info(self):

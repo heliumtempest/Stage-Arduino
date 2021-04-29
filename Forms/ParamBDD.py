@@ -3,6 +3,7 @@ from PySide6.QtWidgets import *
 import sys
 import Commun.ConnexionPostgres
 
+
 class ParamBDD(QWidget):
 
     # def __init__(self, parent=None):
@@ -10,7 +11,7 @@ class ParamBDD(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.pg = Commun.ConnexionPostgres.ConnexionPostgres()
+        #self.pg = Commun.ConnexionPostgres.ConnexionPostgres()
 
         layout = QFormLayout()
 
@@ -29,7 +30,7 @@ class ParamBDD(QWidget):
         self.utilisateurLineEdit= QLineEdit()
         self.mdpLineEdit= QLineEdit()
         self.bddLineEdit = QLineEdit()
-        # ... et avec remplies avec des valeurs par défaut
+        # ... et remplis avec des valeurs par défaut
         self.serveurLineEdit.setText("127.0.0.1")
         self.utilisateurLineEdit.setText("postgres")
         self.mdpLineEdit.setText("admin")
@@ -58,13 +59,15 @@ class ParamBDD(QWidget):
         self.close()
 
     def valider(self):
-        self.pg.serveur = self.serveurLineEdit.text()
-        self.pg.utilisateur =self.utilisateurLineEdit.text()
-        self.pg.mot_de_passe = self.mdpLineEdit.text()
-        self.pg.base_de_donnees = self.bddLineEdit.text()
+        # TODO donner un alias à l'import parce que c'est un peu ridicule ses noms à rallonge^^"
+        Commun.ConnexionPostgres.ConnexionPostgres.serveur = self.serveurLineEdit.text()
+        Commun.ConnexionPostgres.ConnexionPostgres.utilisateur = self.utilisateurLineEdit.text()
+        Commun.ConnexionPostgres.ConnexionPostgres.mot_de_passe = self.mdpLineEdit.text()
+        Commun.ConnexionPostgres.ConnexionPostgres.base_de_donnees = self.bddLineEdit.text()
 
         # Petit contôle
-        self.pg.afficher_info()
+        test = Commun.ConnexionPostgres.ConnexionPostgres()
+        test.afficher_info()
 
         # Les informations sont saisies, la fenêtres peut être fermée
         self.close()

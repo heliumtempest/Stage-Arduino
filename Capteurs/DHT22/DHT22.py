@@ -14,7 +14,7 @@ class Capteur(GenCap):
                                  "VALUES ('{s}', '{dm}', {h}, {t}, {i});"
         self.affichage_console = "Humidité : {h}, Temperature : {t}, Indice : {i}, T0+{tec} ms "
 
-        # Création et écriture de l'entête du fichier csv
+        # Création et écriture de l'en-tête du fichier csv
         entete = "Humidite;Temperature;Indice de chaleur;Tecoule\n"
         csv = open(self.chemin_csv, 'a')
         csv.write(entete)

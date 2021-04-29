@@ -12,7 +12,8 @@ import importlib
 
 
 # TODO le code est pas très "propre"
-# TODO faire des try/except un peu partout
+# TODO faire des try/except un peu partout => c'est +/- fait
+# TODO faire des raise est peut-être pas le plus pertinent
 class Port:
 
     def __init__(self):
@@ -51,8 +52,6 @@ class Port:
 
     def lire_port(self):
         """Lit en continu les informations reçues par le port en série"""
-        #port = self.selectionner_port()
-        #print("Connexion au port : ", self.port)
 
         if self.port is None:
             # TODO il y a déjà un exit si ce cas de figure se présente dans selectionner_port
@@ -60,8 +59,9 @@ class Port:
             print("Fermeture de l'appli")
             exit()
 
-        # Connexion au port (qui a été assigné avec la focntion selectionner_port())
+        # Connexion au port (qui a été assigné avec la fonction selectionner_port())
         arduino = serial.Serial(self.port.device, baudrate=self.baud)
+
         print('Connexion au port ' + arduino.name + ' à une vitesse en baud de ' + str(self.baud))
 
         # Réinitialisation
@@ -86,29 +86,44 @@ class Port:
         cpt = None  # Déclaration de la variable avant son assignation
         try:
             cl_cpt = importlib.import_module(module)  # Importation du module à partir du nom de répértoire
-            #cpt = cl_cpt.Capteur()  # Instanciation d'un objet pour le capteur
-        except:
-            print("Programme non reconnu")
+        except ModuleNotFoundError:
+            print("Aucun module python correspondant au nom du programme a été trouvé")
+            # Le arduino doit dans son programme indiquer le nom du porgramme (dans le 'setup')
+            # Ce nom est utilisé pour récupérer le module python qui lui est associé
+            # Causes d'erreur possible : nom du programme non retourné par le arduino, mauvais emplacement du module,
+            # nom incorrect,...
             raise
             exit()
         try:
             cpt = cl_cpt.Capteur()
-        except:
-            print("Echec de l'instanciation de l'objet représentant le capteur")
+        except TypeError:
+            print("Échec de l'instanciation de l'objet représentant le capteur")
             print("Cause possible : toutes les méthodes virtuelles ne sont pas implémentées")
             raise  # Affiche le message d'erreur associé, qui indique quelle méthode n'est pas implémentée
             exit()
-
+        except AttributeError:  # Capteur() n'est pas reconnu
+            print("La classe Capteur() n'est pas défini dans le module python")
+            raise
+            # Le nom de la classe associée au capteur doit impérativement s'appeler 'Capteur'
 
         # TODO l'exception est pas déjà gérée sur 'creer_table()' ?
-        # Edit : oui, mais c'est possible de déclarer la méthode, mais avec des arguments non conformes à son utilisation ici
+        # TODO l'exception survient avant non ?
+        # Edit : oui, mais c'est possible de déclarer la méthode,
+        # mais avec des arguments non conformes à son utilisation ici
+        # TODO les erreurs doivent-elles être bloquantes ?
         try:
             cpt.creer_table()
         except TypeError:
             print("Échec de la procédure creer_table() avec erreur de type TypeError)")
             print("Cause possible : la méthode est peut-être mal déclarée. Vérifier les arguments de la méthode")
+            # La fonction ne prend aucun paramètre
             #raise
-            #exit() # TODO après tout, on peut continuer sans table ??
+            #exit()
+        except FileNotFoundError:
+            print("La procédure utilise un script qui est introuvable")
+            # Le script n'est pas à l'emplacement spécifié.
+            # Remarque : la racine du chemin absolu (chemin par rapport à l'espace de travail) est dans le répértoire
+            # où se situe le 'main'
         except:
             print("Echec de la procédure creer_table()")
             print("Cause possible : l'implémentation de la fonction génère une erreur")
@@ -125,9 +140,19 @@ class Port:
                 if ligne != "":
                     # Opérations liées au capteur
                     #TODO on pourrait un peu uniformiser les noms genre : ecrire_console ; ecrire_bdd ; ecrire_csv
-                    cpt.afficher_console(ligne)
-                    cpt.inserer_bdd(ligne)
-                    cpt.ecrire_csv(ligne)
+                    try:
+                        cpt.afficher_console(ligne)
+                        cpt.inserer_bdd(ligne)
+                        cpt.ecrire_csv(ligne)
+                    except TypeError:
+                        # Les arguments ne correspondent pas entre l'utilisation faite dans le bloc et leur définition
+                        # dans le module
+                        # Les procédures ne doivent avoir que la ligne reçue par le capteur en argument
+                        print("Au moins une procédure est déclarée avec de mauvais argument")
+                        raise
+                    except:
+                        print("Échec de l'execution d'au moins l'une des procédures")
+
                     if self.textBoxQT is not None:
                         self.ecrire_textbox(ligne)
 

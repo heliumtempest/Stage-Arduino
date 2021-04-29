@@ -4,7 +4,8 @@ from PySide6 import QtCore
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *  # Il a changé de place le bougre (les QActions)
 import sys
-import Commun.Port
+#import Commun.Port
+import Commun.PortAsync #TODO regarder les imports (EDIT pour le moments les classes sont identiques)
 import Forms.ParamBDD
 
 
@@ -13,7 +14,8 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        self.port = Commun.Port.Port()
+        #self.port = Commun.Port.Port()
+        self.port = Commun.PortAsync.PortAsync()
 
         self.setWindowTitle("Fenêtre principale")
 
@@ -73,7 +75,7 @@ class MainWindow(QMainWindow):
     def connexion(self):
         nom_port = self.portsCombobox.currentText()
         self.port.assigner_port(nom_port)
-        self.port.bdd = self.fenetre.pg # TODO c'est pas très clair sans contexte (faisable dans le init ?)
+        #self.port.bdd = self.fenetre.pg # TODO c'est pas très clair sans contexte (faisable dans le init ?)
         #self.port.textBoxQT = self.affichageTextedit # Déjà fait dans le unit
         self.port.lire_port()
 
@@ -82,6 +84,7 @@ class MainWindow(QMainWindow):
         # TODO passer 'self' dans le constructeur de la fenêtre (ça peut clairement être amélioré)
         self.fenetre = Forms.ParamBDD.ParamBDD()
         self.fenetre.show()
+
 
 
 if __name__ == "__main__":

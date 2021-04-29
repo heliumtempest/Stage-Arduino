@@ -55,8 +55,7 @@ class Capteur(GenCapt):
         except FileNotFoundError:  # Le script n'est pas à l'emplacement spécifié
             print("Script de création de la table introuvable")
             exit()
-
+        # TODO cette exception est désormais gérée dans le port
         # Execution du script
         # Rq : il y a une gestion d'exception dans la méthode executer_requete()
-        #TODO mettre dans le try ? (je sais pas ce que ça va faire niveau gestion d'exception)
         self.bdd.executer_requete(script_sql)
