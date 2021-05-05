@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         self.affichageTextedit = QTextEdit()
         # Les actions pour le menu
         action_ouvrirParamBDD = QAction("Base de données", self)
-        action_ouvrirParamBDD.triggered.connect(self.ouvrir_paramBB) # J'ai bien galéré pour trouvé comment faire
+        action_ouvrirParamBDD.triggered.connect(self.ouvrir_paramBDD)  # J'ai bien galéré pour trouvé comment faire
         # Le menu
         barreMenu = QMenuBar()
         menuParametre = barreMenu.addMenu("Paramètres")
@@ -63,6 +63,11 @@ class MainWindow(QMainWindow):
         self.actualiserButton.clicked.connect(self.actualisation)
         self.connexionButton.clicked.connect(self.connexion)
 
+        # Demande des paramètre de la base de données dès le lancement
+        self.paramBDD = Forms.ParamBDD.ParamBDD(self)
+        self.paramBDD.setModal(True)  # La fenêtre ne peut être ignorée #TODO une description plus inspirée
+        self.paramBDD.show()
+
 
     # TODO je sais pas si les @Slot sont nécessaires, j'ai vu des exemples de code sans
 
@@ -77,14 +82,14 @@ class MainWindow(QMainWindow):
         self.port.assigner_port(nom_port)
         #self.port.bdd = self.fenetre.pg # TODO c'est pas très clair sans contexte (faisable dans le init ?)
         #self.port.textBoxQT = self.affichageTextedit # Déjà fait dans le unit
-        self.port.lire_port()
+        #self.port.lire_port() #TODO quelques modifs
+        self.port.asyncio()
 
     @QtCore.Slot()
-    def ouvrir_paramBB(self):
+    def ouvrir_paramBDD(self):
         # TODO passer 'self' dans le constructeur de la fenêtre (ça peut clairement être amélioré)
-        self.fenetre = Forms.ParamBDD.ParamBDD()
-        self.fenetre.show()
-
+        fenetre = Forms.ParamBDD.ParamBDD(self)
+        fenetre.show()
 
 
 if __name__ == "__main__":

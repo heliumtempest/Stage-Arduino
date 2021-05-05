@@ -152,6 +152,7 @@ class Port:
                         raise
                     except:
                         print("Échec de l'execution d'au moins l'une des procédures")
+                        raise
 
                     if self.textBoxQT is not None:
                         self.ecrire_textbox(ligne)
@@ -175,7 +176,7 @@ class Port:
 
     # TODO idem, juste pour QT
     def assigner_port(self, nom_port):
-        """Assigne l'attribur 'port' à l'objet à partir du nom su port."""
+        """Assigne l'attribut 'port' à l'objet à partir du nom su port."""
         if(nom_port == "Aucun port détecté"):
             exit() #TODO c'est un peu radical
         else:

@@ -4,21 +4,12 @@ import sys
 import Commun.ConnexionPostgres
 
 
-class ParamBDD(QWidget):
+class ParamBDD(QDialog):
 
-    # def __init__(self, parent=None):
-    #     super(ParamBDD, self).__init__(parent)
-    def __init__(self):
-        super().__init__()
-
-        #self.pg = Commun.ConnexionPostgres.ConnexionPostgres()
+    def __init__(self, parent=None):
+        super(ParamBDD, self).__init__(parent)
 
         layout = QFormLayout()
-
-        #TODO enlever debug
-        # self.setVisible(True)
-        # print(self.isVisible())
-        # print("Coucou du constructeur")
 
         # Définition des labels
         serveurLabel = QLabel("Adresse du serveur")
@@ -71,13 +62,3 @@ class ParamBDD(QWidget):
 
         # Les informations sont saisies, la fenêtres peut être fermée
         self.close()
-
-
-# test
-# if __name__ == "__main__":
-#     app = QApplication([])
-#     mw = ParamBDD()
-#     mw.resize(350, 200)
-#     mw.show()
-#
-#     sys.exit(app.exec_())

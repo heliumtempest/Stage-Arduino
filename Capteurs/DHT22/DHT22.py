@@ -12,10 +12,10 @@ class Capteur(GenCap):
         self.chemin_csv = "Capteurs/DHT22/csv/DHT_22" + self.t0_str + ".csv"
         self.requete_insertion = "INSERT INTO DHT22(Session, Date, Humidite, Temperature, Indice) " \
                                  "VALUES ('{s}', '{dm}', {h}, {t}, {i});"
-        self.affichage_console = "Humidité : {h}, Temperature : {t}, Indice : {i}, T0+{tec} ms "
+        self.affichage_console = "Humidité : {h}%, Temperature : {t}°C, Indice : {i}, T0+{tec} ms "
 
         # Création et écriture de l'en-tête du fichier csv
-        entete = "Humidite;Temperature;Indice de chaleur;Tecoule\n"
+        entete = "Humidite;Temperature;Indice de chaleur;Temps_ecoule\n"
         csv = open(self.chemin_csv, 'a')
         csv.write(entete)
         csv.close()
@@ -55,11 +55,6 @@ class Capteur(GenCap):
     def creer_table(self):
         """Execute le script qui correspond à la création de la table contenant les mesures du capteurs dans la base de
         données."""
-        # Lecture du fichier contenant le script
-        try:
-            script = open("Capteurs/DHT22/table_DHT22.sql", "r")
-        except FileNotFoundError:
-            print("Script de création non trouvé")
-            exit()
-        # Execution du script
+        script = open("Capteurs/DHT22/table_DHT22.sql", "r")
         self.bdd.executer_requete(script.read())
+        # Rq : Exception de type FileNotFound gérée lors de l'appel de la fonction dans 'lire_port' du module 'Port'

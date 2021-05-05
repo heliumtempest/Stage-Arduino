@@ -1,5 +1,5 @@
 import abc
-from datetime import datetime
+from datetime import datetime, timedelta
 import Commun.ConnexionPostgres as cpg
 
 
@@ -33,3 +33,8 @@ class CapteurInterface(metaclass=abc.ABCMeta):
         """Execute le script qui correspond à la création de la table contenant les mesures du capteurs dans la base de
         données."""
         pass
+
+    def ajouter_ms(self, timestamp, millisecondes):
+        """Ajoute des millisecondes à un timestamp et retourne le timestamp correspondant"""
+        # Les millisecondes sont converties en un entier, 'millisecondes' peut donc être une chaîne de caractère
+        return timestamp + timedelta(milliseconds=int(millisecondes))
