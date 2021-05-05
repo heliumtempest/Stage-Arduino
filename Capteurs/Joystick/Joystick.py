@@ -6,7 +6,7 @@ class Capteur(CapteurInterface):
     def __init__(self):
         super(Capteur, self).__init__()
         self.affichage = "X:{x} Y:{y} T0+{ms} ms"
-        self.inserer_requete = "INSERT INTO \"Joystick\"(\"Session\",  \"X\", \"Y\", \"Date\")" \
+        self.inserer_requete = "INSERT INTO \"Joystick\"(\"Session\",  \"X\", \"Y\", \"Date\") " \
                                "VALUES('{s}', {x}, {y}, '{ts}');"
 
     def creer_table(self):
@@ -16,7 +16,7 @@ class Capteur(CapteurInterface):
     def ecrire_csv(self, ligne):
         # TODO faire un peu mieux
         path = "C:\\Users\\ghisl\\Desktop\\Stage\\dumpcsv\\joystick_{t0}.csv".format(t0=self.t0_str)
-        csv = open(path, 'w')  # Le fichier est écrasé à chaque execution
+        csv = open(path, 'a')
         csv.write(ligne.replace(' ', ';') + '\n')
         csv.close()
 
