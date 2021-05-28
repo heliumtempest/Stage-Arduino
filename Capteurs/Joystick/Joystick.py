@@ -8,15 +8,14 @@ class Capteur(CapteurInterface):
         self.affichage = "X:{x} Y:{y} T0+{ms} ms"
         self.inserer_requete = "INSERT INTO \"Joystick\"(\"Session\",  \"X\", \"Y\", \"Date\") " \
                                "VALUES('{s}', {x}, {y}, '{ts}');"
+        self.csv_path = "CSV/joystick_" + self.t0_str + ".csv" #TODO tester nouvel emplacement
 
     def creer_table(self):
         script = open("Capteurs/Joystick/table_joystick.sql", 'r')
         self.bdd.executer_requete(script.read())
 
     def ecrire_csv(self, ligne):
-        # TODO faire un peu mieux
-        path = "C:\\Users\\ghisl\\Desktop\\Stage\\dumpcsv\\joystick_{t0}.csv".format(t0=self.t0_str)
-        csv = open(path, 'a')
+        csv = open(self.csv_path, 'a')
         csv.write(ligne.replace(' ', ';') + '\n')
         csv.close()
 

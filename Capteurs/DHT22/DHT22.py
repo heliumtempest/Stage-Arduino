@@ -9,7 +9,8 @@ class Capteur(GenCap):
     def __init__(self):
         super().__init__()
         # Emplacement (de manière relative) du fichier csv à générer qui contiendra les données reçues
-        self.chemin_csv = "Capteurs/DHT22/csv/DHT_22" + self.t0_str + ".csv"
+        #self.chemin_csv = "Capteurs/DHT22/csv/DHT_22" + self.t0_str + ".csv" #TODO tester
+        self.chemin_csv = "CSV/DHT_22" + self.t0_str + ".csv"
         # Requête SQL à formater pour insérer les données reçues du capteur dans la base de données
         self.requete_insertion = "INSERT INTO DHT22(Session, Date, Humidite, Temperature, Indice) " \
                                  "VALUES ('{s}', '{dm}', {h}, {t}, {i});"

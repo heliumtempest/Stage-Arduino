@@ -47,7 +47,7 @@ class Capteur(ci.CapteurInterface):
         ###### Version 2 csv
         # champs = ligne.split(" ")
         # champs_dht22 = champs[0:3]  # Les 3 1ères mesures + temps ecoulé (la borne sup n'est PAS incluse)
-        # champs_dht22.append(champs[6])  # Rq : j'ai pas trouvé comment le faire en une seule ligne
+        # champs_dht22.append(champs[6])
         # champs_tsl2561 = champs[3:7]  # (la borne sup n'est PAS incluse)
         # ligne_dht22 = ' '.join(champs_dht22)
         # ligne_tsl2561 = ' '.join(champs_tsl2561)
@@ -55,8 +55,8 @@ class Capteur(ci.CapteurInterface):
         # self.tsl2561.ecrire_csv(ligne_tsl2561)
         ##### Version un seul csv
         champs = ligne.split(" ")
-        csv = open("Capteurs/DHT22_TSL2561/csv/DHT22_TSL2561-" + self.t0_str + ".csv", 'a')
-        # Pour l'ID faire self.t0 = now(); puis convertir le timestamp en str et concaténer
+        #csv = open("Capteurs/DHT22_TSL2561/csv/DHT22_TSL2561-" + self.t0_str + ".csv", 'a')
+        csv = open("CSV/DHT22_TSL2561-" + self.t0_str + ".csv", 'a') #TODO tester le nouvel emplacement
         csv.write(";".join(champs) + "\n")
         csv.close()
 

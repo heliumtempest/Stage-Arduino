@@ -9,13 +9,12 @@ class Capteur(ci.CapteurInterface):
         self.affichage_console = "Pulsation cardiaque : {pc} bpm; T0+{ms}ms"  # bpm : battements par minute
         self.requete_insertion = "INSERT INTO Cardio(\"Date\", \"Session\", \"Pulsation\") VALUES('{d}', '{s}', {bpm});"
 
-        self.chemin_csv = "Capteurs/Cardio/csv/Cardio_" + self.t0_str + ".csv"
+        #self.chemin_csv = "Capteurs/Cardio/csv/Cardio_" + self.t0_str + ".csv" #TODO  tester
+        self.chemin_csv = "CSV/Cardio_" + self.t0_str + ".csv"
         # Création du fichier csv et écriture de l'en-tête
-        en_tete = "bpm;tec\n"
+        en_tete = "Pulsation;Temps\n"
         csv = open(self.chemin_csv, 'a')
-        # TODO 'write' ou 'append' (l'un écrasen l'autre non... même si ce cas de figure ne doit pas se produire,
-        #  ça peut arrivé si le code est modifié à la main pour y mettre un emplacement spécifique)
-        csv.write(en_tete)  # tec : temps écoulé
+        csv.write(en_tete)
         csv.close()
 
     def ecrire_csv(self, ligne):

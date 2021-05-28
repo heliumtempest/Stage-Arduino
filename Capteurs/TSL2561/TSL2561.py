@@ -14,10 +14,11 @@ class Capteur(GenCapt):
         # Chaîne de caractère à formater pour l'affichage au niveau de la console
         self.affichage_console = "Lux : {L}, Luminosité (IR) : {IR}, Luminosité (Spectre entier) : {SE}, T0+{ms}ms"
         # Nom du fichier .csv à créer (nom capteur + date et heure du jour)
-        self.chemin_csv = "Capteurs/TSL2561/csv/TSL2561_" + self.t0_str + ".csv"
+        #self.chemin_csv = "Capteurs/TSL2561/csv/TSL2561_" + self.t0_str + ".csv" #TODO tester le nouvel emplacement
+        self.chemin_csv = "CSV/TSL2561_" + self.t0_str + ".csv"
 
         # Création du fichier et écriture de l'entête
-        header = "Lux;LumIR;Lum;Tec\n"
+        header = "Lux;LumIR;Lum;Temps\n"
         csv = open(self.chemin_csv, 'a')
         csv.write(header)
         csv.close()

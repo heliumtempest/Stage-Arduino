@@ -10,8 +10,8 @@ class Capteur(ci):
         self.inserer = "INSERT INTO mpl3115(\"Session\", \"DateMesure\", \"Pression\", \"Altitude\", \"Temperature\") " \
                        "VALUES('{s}', '{ts}', {Pa}, {h}, {T});"
 
-        self.chemin_csv = "C:\\Users\\ghisl\\Desktop\\Stage\\dumpcsv\\mpl_" + self.t0_str + ".csv"
-        #TODO changer le path
+        self.chemin_csv = "CSV\\mpl_" + self.t0_str + ".csv"
+        #TODO tester le nouvel emplacement du csv
         csv = open(self.chemin_csv, 'w')
         csv.write("Pression;Altitude;Temperature;Temps_ecoule\n")
         csv.close()
