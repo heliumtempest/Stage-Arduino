@@ -1,0 +1,2 @@
+Programme qui affiche le nom du bouton sur lequel on appuie. Ce programme indique quel est le seuil de chacun des boutons
+Rq : Si on appuie sur le bouton pendant une durée inférieure à celle du 'delay' dans le 'loop', il peut ne pas être détecté

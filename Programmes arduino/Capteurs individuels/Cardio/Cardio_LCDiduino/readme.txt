@@ -1,0 +1,1 @@
+Ce programme est une modification du programme arduino "Cardio.ino" afin qu'il affiche les mesures du capteurs sur le LCD iduino.

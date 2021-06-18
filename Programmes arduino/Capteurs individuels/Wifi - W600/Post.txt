@@ -1,0 +1,19 @@
+POST /test/script.php HTTP/1.1
+Host: stageiutarduino.000webhostapp.com
+User-Agent: arduino
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 10
+value=44.6
+
+
+==============================
+généré par reqbin.com :
+
+POST /test/script.php HTTP/1.1
+Host: stageiutarduino.000webhostapp.com
+Accept: */*
+User-Agent: arduino
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 13
+
+value=42.1234

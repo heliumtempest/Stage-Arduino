@@ -1,0 +1,25 @@
+- Déroulement du programme
+L'utilisateur doit saisir les informations de connexion à la base de données. Des paramètres par défaut sont proposés (info de connexion +
+nom de session)
+Le programme détecte les ports disponibles et 1. se ferme si aucun port n'est détecté 2. Ouvre le port s'il n'y en a qu'un de détécté
+3. demande à l'utilisateur de choisir le port à ouvrir si plusieurs sont détectés
+Le programme lit la 1ère ligne reçue, et charge le module python correspondant (le nom du module doit-être le même que celui envoyé par le arduino)
+À chaque ligne, le porgramme écrit dans un fichier csv, insère les données dans la base de données et affiche les données lues dans la console
+
+
+
+- Base de données
+La connexion avec la base de données est représentée par une classe où tous les attributs sont 'static' c'est à dire, communs à
+toutes les instances. Il est donc possible de récupèrer les informations de connexion directement en instanciant un objet et sans
+devoir transmettre ces informations au fur et à mesure de l'execution du programme
+
+
+- Contraintes :
+Un module qui correspond à un capteur doit répondre aux contraintes suivantes
+1. Le nom de la classe doit être 'Capteur'
+2. La classe doit implémenter les procédure 'ecrire_csv', 'afficher_console' et 'inserer_bdd', ces 3 procédures prennent la ligne lue en
+paramètre. Elle doit aussi implémenter la procédure 'creer_table'
+Une interface existe et dispose de quelques paramètre par défaut (connexion vers base de données, timestamp, ...) il est donc recommandé
+que les modules héritent de cette interface
+La première ligne envoyée par le programme arduino doit être le nom du programme, afin de pouvoir récupérer le module python associé
+par correspondance avec ce nom

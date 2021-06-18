@@ -1,0 +1,2 @@
+Affiche 'Hello world' sur l'écran LCD sur la 1ère ligne, ainsi que les secondes écoulées sur la seconde.
+(Sert principalement à vérifier que le module est fonctionnel/correctement branché)
